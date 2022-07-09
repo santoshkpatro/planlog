@@ -57,3 +57,11 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_NO_REPLY_EMAIL = 'Planlog <noreply@planlog.com>'
+
+# Frontend urls
+FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://127.0.0.1:3000/')
+FRONTEND_CONFIRMATION_URL = 'auth/register/'

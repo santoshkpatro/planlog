@@ -10,9 +10,8 @@
     "test:e2e:ci": "start-server-and-test preview http://127.0.0.1:4173/ 'cypress run --e2e'"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^6.1.0",
-    "ant-design-vue": "^3.2.10",
     "axios": "^0.27.2",
+    "bootstrap": "^5.2.0-beta1",
     "lodash": "^4.17.21",
     "pinia": "^2.0.14",
     "vee-validate": "^4.5.11",
