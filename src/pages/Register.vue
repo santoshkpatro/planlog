@@ -3,7 +3,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {
   verifyConfirmationToken,
-  verifyUserAvailablity,
+  verifyUserAvailability,
   registerUser,
   sendConfirmationEmail,
 } from '@/api/v1'
@@ -39,7 +39,7 @@ function checkForValidUsername(e) {
   setTimeout(async () => {
     if (e.target.value) {
       try {
-        const { data } = await verifyUserAvailablity({
+        const { data } = await verifyUserAvailability({
           username: e.target.value,
         })
         isUsernameAvailable.value = data.detail

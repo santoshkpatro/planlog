@@ -18,6 +18,8 @@ export const useUserStore = defineStore({
     },
     removeLoggedInUser() {
       this.user = null
+      localStorage.removeItem('user')
+      location.reload()
     },
   },
 })
