@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from planlog.models.base import BaseUUIDTimeStampedModel
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 
 class UserManager(BaseUserManager):
@@ -72,8 +73,13 @@ class User(BaseUUIDTimeStampedModel, AbstractBaseUser):
     def avatar_url(self):
         if not self.avatar:
             return None
-
         return "assets.planlog.in/%s".format(self.avatar)
+
+    def access_token(self):
+        return str(AccessToken.for_user(self))
+
+    def refresh_token(self):
+        return str(RefreshToken.for_user(self))
 
     """Admin panel config"""
 

@@ -7,12 +7,11 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from planlog.models.user import User
-from .serializers import LoginSerializer, RegisterSerializer
+from .serializers import LoginSerializer, RegisterSerializer, LoggedInUserSerializer, ProfileSerializer
 
 
 def get_user_ip(request):
@@ -144,17 +143,8 @@ class LoginView(APIView):
         user.last_login_ip = get_user_ip(request)
         user.save()
 
-        access_token = str(AccessToken.for_user(user))
-        refresh_token = str(RefreshToken.for_user(user))
-
-        return Response(
-            data={
-                'detail': 'Login success',
-                'access_token': access_token,
-                'refresh_token': refresh_token
-            },
-            status=status.HTTP_200_OK
-        )
+        logged_in_serializer = LoggedInUserSerializer(user)
+        return Response(data=logged_in_serializer.data, status=status.HTTP_200_OK)
 
 
 class AvailabilityView(APIView):
@@ -174,3 +164,12 @@ class AvailabilityView(APIView):
             return Response(data={'detail': False}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response(data={'detail': True}, status=status.HTTP_200_OK)
+
+
+class ProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        profile_serializer = ProfileSerializer(request.user)
+
+        return Response(data=profile_serializer.data, status=status.HTTP_200_OK)

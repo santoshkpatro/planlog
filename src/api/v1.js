@@ -34,3 +34,5 @@ export const sendConfirmationEmail = (email) => {
 }
 
 export const loginUser = (data) => http.post('/user/login/', data)
+
+export const userProfile = () => http.get('/user/profile/')
