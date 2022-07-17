@@ -7,14 +7,19 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
-      path: '/auth/login',
+      path: '/login',
       name: 'login',
-      component: () => import('@/pages/auth/Login.vue')
-    }
-  ]
+      component: () => import('@/pages/Login.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/pages/Register.vue'),
+    },
+  ],
 })
 
 export default router

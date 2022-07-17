@@ -6,7 +6,7 @@ from datetime import timedelta
 # Loading env values from .env file
 load_dotenv()
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 

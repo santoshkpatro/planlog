@@ -12,7 +12,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from planlog.models.user import User
-
 from .serializers import LoginSerializer, RegisterSerializer
 
 
@@ -23,6 +22,14 @@ def get_user_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+class AuthenticationStatusView(APIView):
+    def get(self, request):
+        if bool(request.user and request.user.is_authenticated):
+            return Response(data={'detail': 'User is logged in'}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={'detail': 'User is not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RegisterView(APIView):
@@ -37,7 +44,7 @@ class RegisterView(APIView):
             }, key=settings.SECRET_KEY, algorithm="HS256")
 
             # Sending email
-            confirmation_url = settings.FRONTEND_BASE_URL + settings.FRONTEND_CONFIRMATION_URL + urlencode({'confirmation_token': encoded_token})
+            confirmation_url = settings.FRONTEND_BASE_URL + settings.FRONTEND_CONFIRMATION_URL + '?' + urlencode({'confirmation_token': encoded_token})
             try:
                 subject = 'Registration confirmation email'
                 html_message = render_to_string('emails/auth/confirmation_email.html', {'confirmation_url': confirmation_url})
@@ -60,8 +67,9 @@ class RegisterView(APIView):
 
         elif confirmation_token:
             try:
-                jwt.decode(confirmation_token, key=settings.SECRET_KEY, algorithms=['HS256'])
-                return Response(data={'detail': 'The confirmation link is valid'}, status=status.HTTP_200_OK)
+                decoded_data = jwt.decode(confirmation_token, key=settings.SECRET_KEY, algorithms=['HS256'])
+                decoded_data.pop('exp')
+                return Response(data={'detail': 'The confirmation link is valid', 'data': decoded_data}, status=status.HTTP_200_OK)
             except jwt.ExpiredSignatureError:
                 return Response(data={'detail': 'The confirmation link has been expired!'}, status=status.HTTP_401_UNAUTHORIZED)
             except jwt.InvalidTokenError:
@@ -88,6 +96,13 @@ class RegisterView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
+
+            # Checking for existing User with the given email address
+            try:
+                User.objects.get(email=serializer.data.get('email'))
+                return Response(data={'detail': 'User exists with this email address'}, status=status.HTTP_400_BAD_REQUEST)
+            except User.DoesNotExist:
+                pass
 
             new_user_details = serializer.data
             password = new_user_details.pop('password')
@@ -135,7 +150,7 @@ class LoginView(APIView):
         return Response(
             data={
                 'detail': 'Login success',
-                'acess_token': access_token,
+                'access_token': access_token,
                 'refresh_token': refresh_token
             },
             status=status.HTTP_200_OK

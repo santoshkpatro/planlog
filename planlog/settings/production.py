@@ -1,5 +1,7 @@
 import os
 from planlog.settings.base import *
+from datetime import timedelta
+
 
 DEBUG = False
 
