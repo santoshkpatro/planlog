@@ -6,7 +6,7 @@ import {
   verifyUserAvailablity,
   registerUser,
   sendConfirmationEmail,
-} from '@/api/index'
+} from '@/api/v1'
 
 const router = useRouter()
 const route = useRoute()
