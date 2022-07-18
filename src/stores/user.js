@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { http } from '@/api/v1'
+import { createAvatar } from '@dicebear/avatars'
+import * as initialStyle from '@dicebear/avatars-initials-sprites'
 
 export const useUserStore = defineStore({
   id: 'user',
@@ -8,6 +10,20 @@ export const useUserStore = defineStore({
   }),
   getters: {
     isLoggedIn: (state) => !!state.user,
+    profileImage: (state) => {
+      if (state.user) {
+        if (!state.user.avatar) {
+          return createAvatar(initialStyle, {
+            seed: state.user.full_name,
+            dataUri: true,
+            size: 30,
+            radius: 50,
+          })
+        }
+
+        return state.user.avatar
+      }
+    },
   },
   actions: {
     setLoggedInUser(user) {

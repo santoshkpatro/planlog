@@ -6,6 +6,7 @@ import { loginUser } from '@/api/v1'
 
 const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 
 const isLoading = ref(false)
 const form = reactive({
@@ -20,6 +21,11 @@ async function handleSubmit() {
     const { data } = await loginUser(form)
 
     userStore.setLoggedInUser(data)
+
+    if(route.query.redirect) {
+      router.push(route.query.redirect)
+      return
+    }
 
     router.push({ name: 'profile' })
   } catch (e) {

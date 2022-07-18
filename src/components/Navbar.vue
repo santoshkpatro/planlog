@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const userStore = useUserStore()
+
 </script>
 
 <template>
@@ -33,10 +34,10 @@ const userStore = useUserStore()
       <nav
         class="md:ml-auto flex flex-wrap items-center text-base justify-center"
       >
-        <a class="mr-5 hover:text-gray-900">First Link</a>
+        <!-- <a class="mr-5 hover:text-gray-900">First Link</a>
         <a class="mr-5 hover:text-gray-900">Second Link</a>
         <a class="mr-5 hover:text-gray-900">Third Link</a>
-        <a class="mr-5 hover:text-gray-900">Fourth Link</a>
+        <a class="mr-5 hover:text-gray-900">Fourth Link</a> -->
       </nav>
       <button
         class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
@@ -52,6 +53,9 @@ const userStore = useUserStore()
       >
         Logout
       </button>
+      <router-link class="inline-flex px-3" :to="{ name: 'profile' }">
+        <img :src="userStore.profileImage" alt="NA" />
+      </router-link>
     </div>
   </header>
 </template>
