@@ -1,24 +1,18 @@
 <script setup>
-import Navbar from '@/components/Navbar.vue'
 import { ref, onMounted } from 'vue'
-import { getBoards } from '@/api/v1'
+import { useRoute } from 'vue-router'
 
-const boards = ref([])
+import Navbar from '@/components/Navbar.vue'
+import BoardList from '@/components/BoardList.vue'
 
-async function fetchBoards() {
-  try {
-    const { data } = await getBoards()
-    boards.value = data
-  } catch (e) {
-    console.log(e)
-  }
-}
+const route = useRoute()
 
 onMounted(() => {
-  fetchBoards()
+  console.log(window.location.host.split('.')[0])
 })
 </script>
 
 <template>
   <Navbar />
+  <BoardList />
 </template>
